@@ -58,52 +58,142 @@
   .screen.out { opacity:0; pointer-events:none; transform: translateY(-12px); }
 
   /* ════════════════════════════
-     LANDING
+     LANDING — CINEMATIC INTRO
   ════════════════════════════ */
   #landing {
-    background: radial-gradient(ellipse 60% 50% at 50% 60%, #13121e 0%, var(--bg) 100%);
-    gap: 0;
-    padding: 0 32px;
+    background: #080809;
+    padding: 0;
+    overflow: hidden;
+    cursor: default;
   }
 
-  .logo-wrap { position: relative; text-align: center; margin-bottom: 28px; }
+  #intro-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+  }
+
+  .intro-ui {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .intro-phrase {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(15px, 4.5vw, 22px);
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    text-align: center;
+    max-width: 300px;
+    line-height: 1.7;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+    position: absolute;
+  }
+  .intro-phrase.active { opacity: 1; transform: translateY(0); }
+  .intro-phrase.exit   { opacity: 0; transform: translateY(-8px); }
+
+  .intro-wordmark {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 1.4s cubic-bezier(0.4,0,0.2,1),
+                transform 1.4s cubic-bezier(0.4,0,0.2,1);
+    position: absolute;
+  }
+  .intro-wordmark.active { opacity: 1; transform: translateY(0); }
+
+  .intro-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(13px, 3.5vw, 17px);
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    text-align: center;
+    max-width: 260px;
+    line-height: 1.6;
+  }
+
+  .intro-skip {
+    position: absolute;
+    bottom: 32px; right: 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    background: none; border: none;
+    cursor: pointer;
+    pointer-events: all;
+    transition: color 0.3s;
+    z-index: 10;
+  }
+  .intro-skip:hover { color: var(--text-dim); }
+
+  .intro-progress {
+    position: absolute;
+    bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 8px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .intro-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--text-faint);
+    transition: background 0.5s, transform 0.5s;
+  }
+  .intro-dot.active { background: var(--accent); transform: scale(1.4); }
+
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(123,110,224,0.4);
+    pointer-events: none;
+    animation: ripple-out 1.4s ease-out forwards;
+    z-index: 1;
+  }
+  @keyframes ripple-out {
+    0%   { transform: scale(0); opacity: 0.8; }
+    100% { transform: scale(6); opacity: 0; }
+  }
+
+  .logo-wrap { position: relative; text-align: center; margin-bottom: 0; }
 
   .logo {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(52px, 14vw, 80px);
     font-weight: 300;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     color: #e8e8f0;
     line-height: 1;
   }
 
   .logo-dot {
     display: inline-block;
-    width: 6px; height: 6px;
+    width: 7px; height: 7px;
     border-radius: 50%;
     background: var(--accent);
     margin-left: 2px;
     vertical-align: super;
     font-size: 0;
-    box-shadow: 0 0 12px var(--accent);
+    box-shadow: 0 0 14px var(--accent);
     animation: pulse-dot 3s ease-in-out infinite;
   }
 
   @keyframes pulse-dot {
-    0%,100% { opacity:1; box-shadow: 0 0 12px var(--accent); }
-    50% { opacity:0.5; box-shadow: 0 0 4px var(--accent); }
-  }
-
-  .tagline {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: clamp(14px, 3.5vw, 18px);
-    color: var(--text-dim);
-    letter-spacing: 0.04em;
-    text-align: center;
-    max-width: 280px;
-    line-height: 1.6;
-    margin-bottom: 56px;
+    0%,100% { opacity:1; box-shadow: 0 0 14px var(--accent); }
+    50% { opacity:0.4; box-shadow: 0 0 4px var(--accent); }
   }
 
   .btn-primary {
@@ -121,8 +211,9 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    pointer-events: all;
+    margin-top: 4px;
   }
-
   .btn-primary::before {
     content: '';
     position: absolute; inset: 0;
@@ -134,7 +225,7 @@
   .btn-primary:hover { border-color: var(--accent-dim); color: #e8e8f0; }
 
   .memory-ghost {
-    position: fixed;
+    position: absolute;
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
@@ -148,6 +239,8 @@
     transition: color 1s ease;
     cursor: pointer;
     padding: 8px;
+    pointer-events: all;
+    z-index: 10;
   }
   .memory-ghost.visible { color: var(--text-dim); }
   .memory-ghost .mem-label {
@@ -891,19 +984,57 @@
 </head>
 <body>
 
-<!-- ══ LANDING ══ -->
+<!-- ══ LANDING — CINEMATIC INTRO ══ -->
 <div class="screen" id="landing">
-  <div class="logo-wrap">
-    <span class="logo">Noctera<span class="logo-dot">·</span></span>
+
+  <!-- particle / graph canvas -->
+  <canvas id="intro-canvas"></canvas>
+
+  <!-- phrase sequence -->
+  <div class="intro-ui">
+
+    <div class="intro-phrase" id="phrase-0">
+      You had a thought last Tuesday.<br>You forgot it by Wednesday.
+    </div>
+    <div class="intro-phrase" id="phrase-1">
+      Some feelings arrive without a name.<br>They still deserve a place.
+    </div>
+    <div class="intro-phrase" id="phrase-2">
+      What if your past self<br>had something to tell you?
+    </div>
+    <div class="intro-phrase" id="phrase-3">
+      Your thoughts are not separate.<br>They echo. They connect. They remember.
+    </div>
+
+    <!-- final wordmark reveal -->
+    <div class="intro-wordmark" id="intro-wordmark">
+      <div class="logo-wrap">
+        <span class="logo">Noctera<span class="logo-dot"></span></span>
+      </div>
+      <p class="intro-tagline">Write into the dark.<br>Find the thread.</p>
+      <button class="btn-primary" id="start-btn">Start writing</button>
+    </div>
+
   </div>
-  <p class="tagline">A quiet place to write, reflect, and connect your thoughts.</p>
-  <button class="btn-primary" id="start-btn">
-    <span>Start writing</span>
-  </button>
+
+  <!-- progress dots -->
+  <div class="intro-progress" id="intro-progress">
+    <div class="intro-dot active" data-i="0"></div>
+    <div class="intro-dot" data-i="1"></div>
+    <div class="intro-dot" data-i="2"></div>
+    <div class="intro-dot" data-i="3"></div>
+    <div class="intro-dot" data-i="4"></div>
+  </div>
+
+  <!-- skip -->
+  <button class="intro-skip" id="intro-skip">Skip ↗</button>
+
+  <!-- memory ghost (shown after wordmark) -->
   <div class="memory-ghost" id="memory-ghost">
     <span class="mem-label">a memory</span>
     <span id="memory-text"></span>
   </div>
+
 </div>
 
 <!-- ══ WRITER ══ -->
@@ -1304,17 +1435,299 @@ function updateClock() {
 // ═══════════════════════════════════
 // LANDING
 // ═══════════════════════════════════
+// ═══════════════════════════════════
+// CINEMATIC INTRO ENGINE
+// ═══════════════════════════════════
 function initLanding() {
-  // Random memory ghost
-  if (entries.length > 0) {
-    const old = entries[Math.floor(Math.random() * entries.length)];
-    const ghost = document.getElementById('memory-ghost');
-    const text = document.getElementById('memory-text');
-    const truncated = old.text.length > 80 ? old.text.slice(0, 80) + '…' : old.text;
-    text.textContent = '"' + truncated + '"';
-    setTimeout(() => ghost.classList.add('visible'), 3000);
-    ghost.addEventListener('click', () => openDetail(old.id));
+  const canvas = document.getElementById('intro-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, animId;
+  let mouseX = -999, mouseY = -999;
+  let introPhase = 0;   // 0-3 phrases, 4 = wordmark
+  let phaseTimer = null;
+  let particles = [];
+  let nodes = [];
+  let edges = [];
+
+  // ── resize ──
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
   }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // ── particles: drifting thought-motes ──
+  function makeParticle() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.25,
+      r: Math.random() * 1.4 + 0.3,
+      alpha: Math.random() * 0.4 + 0.05,
+      pulse: Math.random() * Math.PI * 2,
+    };
+  }
+  for (let i = 0; i < 90; i++) particles.push(makeParticle());
+
+  // ── graph nodes: thought-map preview ──
+  const NODE_COUNT = 7;
+  for (let i = 0; i < NODE_COUNT; i++) {
+    const angle = (i / NODE_COUNT) * Math.PI * 2;
+    nodes.push({
+      x: 0, y: 0, // set relative in draw
+      bx: 0.38 + 0.24 * Math.cos(angle) + (Math.random()-0.5)*0.08,
+      by: 0.48 + 0.22 * Math.sin(angle) + (Math.random()-0.5)*0.08,
+      r: i === 0 ? 9 : (i < 3 ? 7 : 5),
+      connected: i < 4,
+      alpha: 0,
+      pulseOffset: Math.random() * Math.PI * 2,
+      labelAge: Math.random() * 100,
+    });
+  }
+  // edges between nodes
+  edges = [[0,1],[0,2],[1,2],[1,3],[2,4],[3,5],[0,6]];
+
+  // ── main draw loop ──
+  let frame = 0;
+  function draw() {
+    animId = requestAnimationFrame(draw);
+    frame++;
+    ctx.clearRect(0, 0, W, H);
+
+    const progress = Math.min(introPhase / 4, 1); // 0→1 as we advance
+
+    // 1. background gradient (deepens over time)
+    const grd = ctx.createRadialGradient(W*0.5, H*0.55, 0, W*0.5, H*0.55, Math.max(W,H)*0.7);
+    grd.addColorStop(0, `rgba(19,18,30,${0.4 + progress*0.5})`);
+    grd.addColorStop(1, 'rgba(8,8,9,0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+
+    // 2. particles
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.pulse += 0.012;
+      if (p.x < -4) p.x = W+4;
+      if (p.x > W+4) p.x = -4;
+      if (p.y < -4) p.y = H+4;
+      if (p.y > H+4) p.y = -4;
+
+      // react to mouse/touch
+      const dx = p.x - mouseX, dy = p.y - mouseY;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 80) {
+        p.vx += dx / dist * 0.06;
+        p.vy += dy / dist * 0.06;
+      }
+      // dampen
+      p.vx *= 0.98; p.vy *= 0.98;
+
+      const a = p.alpha * (0.7 + 0.3 * Math.sin(p.pulse));
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,200,210,${a})`;
+      ctx.fill();
+    });
+
+    // 3. graph (fades in during phase 2-4)
+    const graphAlpha = Math.max(0, (introPhase - 1.5) / 2.5);
+    if (graphAlpha > 0) {
+      // update node positions
+      nodes.forEach(n => { n.x = n.bx * W; n.y = n.by * H; });
+
+      // edges
+      edges.forEach(([a, b]) => {
+        const na = nodes[a], nb = nodes[b];
+        ctx.beginPath();
+        ctx.moveTo(na.x, na.y);
+        ctx.lineTo(nb.x, nb.y);
+        ctx.strokeStyle = `rgba(123,110,224,${graphAlpha * 0.3})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+
+      // nodes
+      nodes.forEach((n, i) => {
+        n.alpha = Math.min(1, n.alpha + 0.008);
+        const pulse = 0.7 + 0.3 * Math.sin(frame * 0.02 + n.pulseOffset);
+        const a = graphAlpha * n.alpha;
+
+        // mouse proximity reaction
+        const dx = n.x - mouseX, dy = n.y - mouseY;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const hover = Math.max(0, 1 - dist / 60);
+
+        if (n.connected) {
+          // glow
+          const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 3.5);
+          g.addColorStop(0, `rgba(123,110,224,${a * 0.35 * pulse + hover * 0.2})`);
+          g.addColorStop(1, 'rgba(123,110,224,0)');
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r * 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = g;
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r + hover * 3, 0, Math.PI * 2);
+        ctx.fillStyle = n.connected
+          ? `rgba(61,52,112,${a})`
+          : `rgba(24,24,28,${a})`;
+        ctx.fill();
+        ctx.strokeStyle = n.connected
+          ? `rgba(123,110,224,${a * pulse})`
+          : `rgba(58,58,66,${a * 0.5})`;
+        ctx.lineWidth = n.connected ? 1.5 : 1;
+        ctx.stroke();
+
+        if (n.connected && n.r >= 7) {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(123,110,224,${a * 0.8})`;
+          ctx.fill();
+        }
+      });
+    }
+
+    // 4. mouse interaction glow
+    if (mouseX > 0 && mouseY > 0) {
+      const mg = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 60);
+      mg.addColorStop(0, 'rgba(123,110,224,0.06)');
+      mg.addColorStop(1, 'rgba(123,110,224,0)');
+      ctx.beginPath();
+      ctx.arc(mouseX, mouseY, 60, 0, Math.PI * 2);
+      ctx.fillStyle = mg;
+      ctx.fill();
+    }
+  }
+  draw();
+
+  // ── phrase sequencer ──
+  const PHRASES = ['phrase-0','phrase-1','phrase-2','phrase-3'];
+  const PHRASE_DURATION = 3200; // ms per phrase
+
+  function showPhrase(i) {
+    introPhase = i;
+    updateDots(i);
+
+    // hide all first
+    PHRASES.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.classList.remove('active'); el.classList.add('exit'); }
+    });
+
+    if (i < 4) {
+      const el = document.getElementById(PHRASES[i]);
+      if (el) {
+        setTimeout(() => {
+          el.classList.remove('exit');
+          el.classList.add('active');
+        }, 60);
+      }
+      phaseTimer = setTimeout(() => showPhrase(i + 1), PHRASE_DURATION);
+    } else {
+      // show wordmark
+      introPhase = 4;
+      updateDots(4);
+      const wm = document.getElementById('intro-wordmark');
+      setTimeout(() => wm.classList.add('active'), 200);
+      // memory ghost
+      if (entries.length > 0) {
+        const old = entries[Math.floor(Math.random() * entries.length)];
+        const ghost = document.getElementById('memory-ghost');
+        const text = document.getElementById('memory-text');
+        const truncated = old.text.length > 80 ? old.text.slice(0, 80) + '…' : old.text;
+        text.textContent = '"' + truncated + '"';
+        setTimeout(() => ghost.classList.add('visible'), 2600);
+        ghost.addEventListener('click', () => openDetail(old.id));
+      }
+    }
+  }
+
+  function updateDots(phase) {
+    document.querySelectorAll('.intro-dot').forEach(d => {
+      d.classList.toggle('active', parseInt(d.dataset.i) === phase);
+    });
+  }
+
+  // start after brief pause
+  setTimeout(() => showPhrase(0), 800);
+
+  // ── skip ──
+  document.getElementById('intro-skip').addEventListener('click', skipIntro);
+
+  function skipIntro() {
+    if (phaseTimer) clearTimeout(phaseTimer);
+    cancelAnimationFrame(animId);
+    PHRASES.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.classList.remove('active','exit'); }
+    });
+    introPhase = 4;
+    updateDots(4);
+    const wm = document.getElementById('intro-wordmark');
+    wm.classList.add('active');
+    // restart minimal canvas for bg only
+    function minimalDraw() {
+      animId = requestAnimationFrame(minimalDraw);
+      ctx.clearRect(0, 0, W, H);
+      const grd = ctx.createRadialGradient(W*0.5, H*0.55, 0, W*0.5, H*0.55, Math.max(W,H)*0.7);
+      grd.addColorStop(0, 'rgba(19,18,30,0.9)');
+      grd.addColorStop(1, 'rgba(8,8,9,0)');
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, W, H);
+      particles.forEach(p => {
+        p.x += p.vx * 0.5; p.y += p.vy * 0.5; p.pulse += 0.012;
+        if (p.x < -4) p.x = W+4; if (p.x > W+4) p.x = -4;
+        if (p.y < -4) p.y = H+4; if (p.y > H+4) p.y = -4;
+        const a = p.alpha * (0.7 + 0.3 * Math.sin(p.pulse));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(200,200,210,${a})`;
+        ctx.fill();
+      });
+    }
+    minimalDraw();
+  }
+
+  // ── tap/click to advance phrase manually ──
+  canvas.addEventListener('click', (e) => {
+    if (introPhase >= 4) return;
+    if (phaseTimer) clearTimeout(phaseTimer);
+    spawnRipple(e.clientX, e.clientY);
+    showPhrase(introPhase + 1);
+  });
+  canvas.addEventListener('touchend', (e) => {
+    if (introPhase >= 4) return;
+    if (phaseTimer) clearTimeout(phaseTimer);
+    const t = e.changedTouches[0];
+    spawnRipple(t.clientX, t.clientY);
+    showPhrase(introPhase + 1);
+  });
+
+  // ── ripple effect on tap ──
+  function spawnRipple(x, y) {
+    const el = document.createElement('div');
+    el.className = 'ripple';
+    const size = 40;
+    el.style.cssText = `width:${size}px;height:${size}px;left:${x - size/2}px;top:${y - size/2}px;`;
+    document.getElementById('landing').appendChild(el);
+    setTimeout(() => el.remove(), 1500);
+  }
+
+  // ── mouse tracking ──
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+  });
+  canvas.addEventListener('touchmove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.touches[0].clientX - rect.left;
+    mouseY = e.touches[0].clientY - rect.top;
+  }, { passive: true });
+  canvas.addEventListener('mouseleave', () => { mouseX = -999; mouseY = -999; });
 }
 
 document.getElementById('start-btn').addEventListener('click', () => goTo('writer'));
