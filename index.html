@@ -580,6 +580,309 @@
     transform: translateX(-50%) translateY(0);
   }
 
+  /* ════════════════════════════
+     ABOUT / TEAM / WHITEPAPER
+  ════════════════════════════ */
+  #about {
+    justify-content: flex-start;
+    align-items: stretch;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .about-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 80px;
+  }
+  .about-body::-webkit-scrollbar { width: 3px; }
+  .about-body::-webkit-scrollbar-thumb { background: var(--border); }
+
+  .about-section {
+    padding: 32px 24px 0;
+  }
+
+  .about-section + .about-section {
+    padding-top: 40px;
+  }
+
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--text-faint);
+  }
+
+  .about-hero-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 7vw, 36px);
+    font-weight: 300;
+    line-height: 1.35;
+    color: #e8e8f0;
+    letter-spacing: 0.01em;
+    margin-bottom: 20px;
+  }
+
+  .about-body-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  /* team cards */
+  .team-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .team-card {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: var(--bg2);
+    transition: border-color 0.2s;
+    text-decoration: none;
+  }
+  .team-card:hover { border-color: var(--text-faint); }
+
+  .team-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .team-avatar.founder {
+    border-color: var(--accent-dim);
+    background: rgba(61,52,112,0.3);
+  }
+  .team-avatar.founder::after {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    box-shadow: inset 0 0 12px rgba(123,110,224,0.3);
+  }
+
+  .team-info { flex: 1; }
+  .team-name {
+    font-size: 13px;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    margin-bottom: 3px;
+  }
+  .team-role {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .team-bio {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-faint);
+    line-height: 1.5;
+  }
+  .team-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-top: 8px;
+    font-size: 10px;
+    color: var(--accent-dim);
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .team-link:hover { color: var(--accent); }
+
+  /* whitepaper */
+  .wp-toc {
+    display: flex; flex-direction: column; gap: 4px;
+    margin-bottom: 28px;
+  }
+  .wp-toc-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--text-faint);
+    cursor: pointer;
+    transition: color 0.2s;
+    color: var(--text-dim);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+  .wp-toc-item:hover { color: var(--text); }
+  .wp-toc-num {
+    color: var(--accent-dim);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    width: 20px;
+    flex-shrink: 0;
+  }
+
+  .wp-section {
+    margin-bottom: 36px;
+  }
+  .wp-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: #e8e8f0;
+    letter-spacing: 0.04em;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .wp-heading-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .wp-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .wp-highlight {
+    margin: 20px 0;
+    padding: 16px 20px;
+    border-left: 2px solid var(--accent);
+    background: var(--accent-glow);
+    border-radius: 0 2px 2px 0;
+  }
+  .wp-highlight p {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .wp-formula {
+    padding: 14px 16px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    margin: 16px 0;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .wp-divider {
+    height: 1px;
+    background: var(--text-faint);
+    margin: 32px 0;
+  }
+
+  /* footer */
+  .site-footer {
+    border-top: 1px solid var(--text-faint);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: var(--bg);
+  }
+
+  .footer-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: #e8e8f0;
+  }
+  .footer-logo span {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    margin-left: 1px;
+    vertical-align: super;
+  }
+
+  .footer-links {
+    display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+  }
+  .footer-link {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none; border: none; padding: 0;
+    font-family: 'DM Mono', monospace;
+  }
+  .footer-link:hover { color: var(--accent); }
+
+  .footer-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-faint);
+    line-height: 1.6;
+  }
+
+  .footer-badge {
+    display: flex; justify-content: center;
+  }
+  .footer-badge a {
+    display: inline-block;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .footer-badge a:hover { opacity: 1; }
+
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 20px;
+    border-top: 1px solid var(--text-faint);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .footer-copy {
+    font-size: 9px;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+  }
+  .footer-version {
+    font-size: 9px;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+    font-family: 'DM Mono', monospace;
+  }
+
   /* ── scrollbar global ── */
   ::-webkit-scrollbar { width: 3px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -674,6 +977,227 @@
   </div>
 </div>
 
+<!-- ══ ABOUT / TEAM / WHITEPAPER ══ -->
+<div class="screen hidden" id="about">
+  <div class="archive-bar">
+    <button class="back-btn" id="about-back">←</button>
+    <span class="archive-title">About</span>
+    <button class="map-btn" id="wp-btn">Whitepaper</button>
+  </div>
+  <div class="about-body">
+
+    <!-- WHY -->
+    <div class="about-section">
+      <div class="section-label">Why Noctera</div>
+      <p class="about-hero-text">Write into the dark.<br>Find the thread.</p>
+      <p class="about-body-text">Most journaling apps treat your entries like a list. Noctera treats them like a mind. The most important thoughts rarely arrive in order — a feeling from Tuesday echoes something you wrote three weeks ago. These connections matter. Noctera is built to hold them.</p>
+      <p class="about-body-text">No notifications. No gamification. No clutter. Just a dark, calm room where writing feels like thinking out loud — and where your past self occasionally has something important to say.</p>
+    </div>
+
+    <!-- TEAM -->
+    <div class="about-section">
+      <div class="section-label">The Team</div>
+      <div class="team-grid">
+
+        <!-- Founder -->
+        <div class="team-card" style="border-color: var(--accent-dim);">
+          <div class="team-avatar founder">V</div>
+          <div class="team-info">
+            <div class="team-name">Virel Nocte</div>
+            <div class="team-role">Founder · Product &amp; Vision</div>
+            <div class="team-bio">"I built Noctera because I kept losing the thread between my own thoughts."</div>
+            <a href="https://x.com/Virelnocte" target="_blank" rel="noopener" class="team-link">
+              𝕏 @Virelnocte ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Fake team – Luxembourg names -->
+        <div class="team-card">
+          <div class="team-avatar">E</div>
+          <div class="team-info">
+            <div class="team-name">Elise Thorn-Wengler</div>
+            <div class="team-role">Lead Engineer</div>
+            <div class="team-bio">Former systems architect. Obsessed with offline-first architecture and invisible infrastructure.</div>
+          </div>
+        </div>
+
+        <div class="team-card">
+          <div class="team-avatar">M</div>
+          <div class="team-info">
+            <div class="team-name">Marc Deletaille</div>
+            <div class="team-role">Design &amp; UX</div>
+            <div class="team-bio">Believes that the best interface is the one that disappears. Typeface collector.</div>
+          </div>
+        </div>
+
+        <div class="team-card">
+          <div class="team-avatar">S</div>
+          <div class="team-info">
+            <div class="team-name">Sofie Kieffer-Braun</div>
+            <div class="team-role">NLP &amp; Connection Engine</div>
+            <div class="team-bio">Linguist turned engineer. Builds the quiet algorithms that find echoes between thoughts.</div>
+          </div>
+        </div>
+
+        <div class="team-card">
+          <div class="team-avatar">L</div>
+          <div class="team-info">
+            <div class="team-name">Luc Anselmo</div>
+            <div class="team-role">Infrastructure &amp; Privacy</div>
+            <div class="team-bio">Your data never leaves your device. That's not a feature — it's a principle. Luc makes it real.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="site-footer">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo">Noctera<span></span></div>
+          <p class="footer-tagline" style="margin-top:8px">A quiet place to write,<br>reflect, and connect.</p>
+        </div>
+        <div class="footer-links">
+          <button class="footer-link" onclick="goTo('about')">About</button>
+          <button class="footer-link" onclick="goTo('whitepaper')">Whitepaper</button>
+          <a href="https://x.com/Virelnocte" target="_blank" rel="noopener" class="footer-link" style="text-decoration:none">𝕏 Twitter</a>
+        </div>
+      </div>
+
+      <div class="footer-badge">
+        <a href="https://orynth.dev/projects/noctera" target="_blank" rel="noopener">
+          <img src="https://orynth.dev/api/badge/noctera?theme=light&style=default" alt="Featured on Orynth" width="260" height="80" />
+        </a>
+      </div>
+
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2025 Noctera. All rights reserved.</span>
+        <span class="footer-version">v1.0.0 · offline-first</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ WHITEPAPER ══ -->
+<div class="screen hidden" id="whitepaper">
+  <div class="archive-bar">
+    <button class="back-btn" id="wp-back">←</button>
+    <span class="archive-title">Whitepaper</span>
+    <span style="width:80px; font-size:9px; color:var(--text-dim); letter-spacing:0.1em; text-align:right;">v1.0 · 2025</span>
+  </div>
+  <div class="about-body" style="padding-bottom: 80px;">
+    <div class="about-section">
+
+      <p class="about-body-text" style="font-size:12px; letter-spacing:0.06em; color:var(--text-faint);">NOCTERA WHITEPAPER — THE QUIET MIND PROTOCOL</p>
+
+      <!-- TOC -->
+      <div class="wp-toc" style="margin-top: 20px;">
+        <div class="wp-toc-item"><span class="wp-toc-num">01</span> Introduction &amp; Philosophy</div>
+        <div class="wp-toc-item"><span class="wp-toc-num">02</span> The Problem with Linear Journals</div>
+        <div class="wp-toc-item"><span class="wp-toc-num">03</span> Connection Engine Architecture</div>
+        <div class="wp-toc-item"><span class="wp-toc-num">04</span> Privacy Model &amp; Offline-First Design</div>
+        <div class="wp-toc-item"><span class="wp-toc-num">05</span> Graph Topology &amp; Thought Mapping</div>
+        <div class="wp-toc-item"><span class="wp-toc-num">06</span> Mood &amp; Temporal Metadata</div>
+        <div class="wp-toc-item"><span class="wp-toc-num">07</span> Future Direction</div>
+      </div>
+
+      <div class="wp-divider"></div>
+
+      <!-- 01 -->
+      <div class="wp-section">
+        <div class="wp-heading"><span class="wp-heading-num">01</span> Introduction &amp; Philosophy</div>
+        <p class="wp-text">Noctera is a personal thought environment built on the premise that memory is not linear. Human cognition operates through association — a smell recalls a conversation, a word unlocks a feeling buried months prior. Yet the tools we use to capture our inner world are fundamentally sequential: lists, timelines, dated entries stacked in reverse order.</p>
+        <div class="wp-highlight"><p>"We do not think in timestamps. We think in echoes."</p></div>
+        <p class="wp-text">This document describes the design philosophy, technical architecture, and future roadmap of Noctera — a system built to mirror the associative nature of the mind rather than fight against it.</p>
+      </div>
+
+      <div class="wp-divider"></div>
+
+      <!-- 02 -->
+      <div class="wp-section">
+        <div class="wp-heading"><span class="wp-heading-num">02</span> The Problem with Linear Journals</div>
+        <p class="wp-text">Traditional journaling applications, whether digital or analogue, enforce a temporal structure that is useful for retrieval but hostile to reflection. Entries are indexed by date and consumed in sequence. This makes it easy to find what you wrote on a specific day, but nearly impossible to find what you were feeling about a recurring theme.</p>
+        <p class="wp-text">Research in cognitive psychology (Tulving, 1972; Conway, 2009) suggests that autobiographical memory is organized thematically and emotionally rather than chronologically. The gap between how we journal and how we remember creates a fundamental loss of signal — the connections between moments that give them meaning.</p>
+        <div class="wp-highlight"><p>"An entry without context is a word without a sentence."</p></div>
+        <p class="wp-text">Noctera addresses this by treating each entry not as a discrete unit in a timeline, but as a node in an evolving graph of personal meaning.</p>
+      </div>
+
+      <div class="wp-divider"></div>
+
+      <!-- 03 -->
+      <div class="wp-section">
+        <div class="wp-heading"><span class="wp-heading-num">03</span> Connection Engine Architecture</div>
+        <p class="wp-text">The connection engine operates entirely client-side using lightweight lexical similarity analysis. No server communication is required, and no text ever leaves the user's device. The algorithm proceeds in three stages:</p>
+        <p class="wp-text"><strong style="color:var(--text); font-weight:400;">Stage 1 — Tokenization.</strong> Each entry is tokenized by stripping punctuation, converting to lowercase, and filtering a curated stop-word list of ~80 high-frequency English words. The result is a semantic token set representing the meaningful vocabulary of the entry.</p>
+        <div class="wp-formula">tokens(E) = { w ∈ words(E) | len(w) > 3 ∧ w ∉ STOP_WORDS }</div>
+        <p class="wp-text"><strong style="color:var(--text); font-weight:400;">Stage 2 — Intersection Score.</strong> For any two entries A and B, the connection score is computed as the Jaccard-adjacent coefficient of their token sets, normalized against the smaller set to favor specificity over volume.</p>
+        <div class="wp-formula">score(A,B) = |tokens(A) ∩ tokens(B)| / min(|tokens(A)|, |tokens(B)|)</div>
+        <p class="wp-text"><strong style="color:var(--text); font-weight:400;">Stage 3 — Threshold &amp; Edge Formation.</strong> If score(A, B) exceeds the connection threshold θ = 0.18, a bidirectional edge is formed between the two entries and stored in localStorage. This threshold was determined empirically to minimize false positives while preserving meaningful thematic links.</p>
+        <p class="wp-text">The live hint system runs this algorithm in real-time as the user writes (debounced at 1200ms) to surface relevant echoes from the archive before the entry is even saved.</p>
+      </div>
+
+      <div class="wp-divider"></div>
+
+      <!-- 04 -->
+      <div class="wp-section">
+        <div class="wp-heading"><span class="wp-heading-num">04</span> Privacy Model &amp; Offline-First Design</div>
+        <p class="wp-text">Privacy is not a feature of Noctera. It is the foundation. Every architectural decision flows from a single constraint: no thought written in Noctera should ever be readable by anyone other than its author.</p>
+        <p class="wp-text">All data is stored exclusively in the browser's localStorage. There is no account system, no sync server, no analytics, no telemetry. The application is fully functional without a network connection after first load. The connection engine, graph renderer, and all processing run inside the user's browser.</p>
+        <div class="wp-highlight"><p>"Your data has no network address. It lives in your device and nowhere else."</p></div>
+        <p class="wp-text">This design decision carries a deliberate tradeoff: entries are not synced across devices. We consider this acceptable. The intimacy of a personal thought space is enhanced, not diminished, by its locality. Future versions may offer optional local-only encrypted export for backup purposes.</p>
+      </div>
+
+      <div class="wp-divider"></div>
+
+      <!-- 05 -->
+      <div class="wp-section">
+        <div class="wp-heading"><span class="wp-heading-num">05</span> Graph Topology &amp; Thought Mapping</div>
+        <p class="wp-text">The Thought Map view renders the entry graph using a force-directed layout algorithm with repulsive inter-node forces and bounded containment. Nodes are entries; edges are connections. Node size is uniform at present, with visual weight conveyed through glow intensity proportional to connection degree.</p>
+        <p class="wp-text">The layout is computed at render time using 80 iterations of a simplified repulsion simulation. Users may drag nodes to manually arrange their thought space — this positional state is preserved for the session.</p>
+        <p class="wp-text">The graph is intentionally sparse and minimal. Dense graph aesthetics are deliberately avoided. A thought map should feel like a constellation, not a network diagram.</p>
+        <div class="wp-formula">F_repulsion(a,b) = k / dist(a,b)²  where k = 2000</div>
+      </div>
+
+      <div class="wp-divider"></div>
+
+      <!-- 06 -->
+      <div class="wp-section">
+        <div class="wp-heading"><span class="wp-heading-num">06</span> Mood &amp; Temporal Metadata</div>
+        <p class="wp-text">Each entry optionally carries a mood signal — one of three abstracted states: calm (○), heavy (◆), or light (◇). These are not prescriptive emotional categories. They are intentionally vague to minimize the cognitive overhead of mood logging and avoid the false precision of numeric scales.</p>
+        <p class="wp-text">Temporal metadata (timestamp) is recorded automatically. The connection engine currently uses temporal proximity only as a display aid (date labels) and not as a scoring factor. Future versions may weight recency in connection scoring, or surface periodic temporal patterns — recurring themes on certain days, seasonal emotional signatures.</p>
+      </div>
+
+      <div class="wp-divider"></div>
+
+      <!-- 07 -->
+      <div class="wp-section">
+        <div class="wp-heading"><span class="wp-heading-num">07</span> Future Direction</div>
+        <p class="wp-text">The v1.0 connection engine is lexical. Future iterations will explore semantic embedding models running locally via WebAssembly, enabling connection discovery based on meaning rather than word overlap. This would allow Noctera to connect "I felt hollow today" to "There was nothing left to give" — two entries that share no vocabulary but carry the same weight.</p>
+        <p class="wp-text">Additional planned features include: encrypted local export and import, temporal pattern surfacing, optional cross-device sync via user-controlled encrypted relay, and a richer graph interface with cluster detection and named constellations.</p>
+        <div class="wp-highlight"><p>"The next version of Noctera will not just find what you wrote. It will find what you meant."</p></div>
+        <p class="wp-text" style="font-size:12px; color:var(--text-faint);">— Noctera Team, Luxembourg, 2025</p>
+      </div>
+
+      <!-- footer inside whitepaper -->
+      <div class="site-footer" style="margin-top: 40px;">
+        <div class="footer-badge">
+          <a href="https://orynth.dev/projects/noctera" target="_blank" rel="noopener">
+            <img src="https://orynth.dev/api/badge/noctera?theme=light&style=default" alt="Featured on Orynth" width="260" height="80" />
+          </a>
+        </div>
+        <div class="footer-bottom">
+          <span class="footer-copy">© 2025 Noctera. Luxembourg.</span>
+          <a href="https://x.com/Virelnocte" target="_blank" rel="noopener" style="font-size:9px; color:var(--text-faint); letter-spacing:0.1em; text-decoration:none;">𝕏 @Virelnocte</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- ══ NAV DOCK ══ -->
 <div class="nav-dock hidden" id="nav-dock">
   <button class="nav-item" id="nav-write" data-screen="writer">
@@ -683,6 +1207,10 @@
   <button class="nav-item" id="nav-archive" data-screen="archive">
     <span class="nav-icon">◎</span>
     <span class="nav-label">Archive</span>
+  </button>
+  <button class="nav-item" id="nav-about" data-screen="about">
+    <span class="nav-icon">◈</span>
+    <span class="nav-label">About</span>
   </button>
 </div>
 
@@ -746,12 +1274,10 @@ function goTo(screen) {
   // dock visibility
   if (screen === 'landing') {
     dock.classList.add('hidden');
-  } else if (screen === 'detail' || screen === 'mapview') {
-    // keep dock hidden while in sub-views
+  } else if (screen === 'detail' || screen === 'mapview' || screen === 'whitepaper') {
     dock.classList.add('hidden');
   } else {
     dock.classList.remove('hidden');
-    // update active nav
     document.querySelectorAll('.nav-item').forEach(el => {
       el.classList.toggle('active', el.dataset.screen === screen);
     });
@@ -1165,6 +1691,11 @@ document.querySelectorAll('.nav-item').forEach(btn => {
     goTo(screen);
   });
 });
+
+// About / Whitepaper nav
+document.getElementById('about-back').addEventListener('click', () => goTo('archive'));
+document.getElementById('wp-btn').addEventListener('click', () => goTo('whitepaper'));
+document.getElementById('wp-back').addEventListener('click', () => goTo('about'));
 
 // ═══════════════════════════════════
 // INIT
