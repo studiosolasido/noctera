@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Noctera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080809;
+    --bg2: #0e0e10;
+    --bg3: #141416;
+    --surface: #18181c;
+    --border: #242428;
+    --text: #c8c8d0;
+    --text-dim: #5a5a66;
+    --text-faint: #2e2e36;
+    --accent: #7b6ee0;
+    --accent-dim: #3d3470;
+    --accent-glow: rgba(123,110,224,0.12);
+    --red: #e06e6e;
+    --green: #6ec98a;
+    --gold: #e0c46e;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow: hidden;
+  }
+
+  /* ── noise grain overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  /* ── screens ── */
+  .screen {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1);
+    will-change: opacity, transform;
+  }
+  .screen.hidden { opacity:0; pointer-events:none; transform: translateY(12px); }
+  .screen.out { opacity:0; pointer-events:none; transform: translateY(-12px); }
+
+  /* ════════════════════════════
+     LANDING
+  ════════════════════════════ */
+  #landing {
+    background: radial-gradient(ellipse 60% 50% at 50% 60%, #13121e 0%, var(--bg) 100%);
+    gap: 0;
+    padding: 0 32px;
+  }
+
+  .logo-wrap { position: relative; text-align: center; margin-bottom: 28px; }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 14vw, 80px);
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: #e8e8f0;
+    line-height: 1;
+  }
+
+  .logo-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-left: 2px;
+    vertical-align: super;
+    font-size: 0;
+    box-shadow: 0 0 12px var(--accent);
+    animation: pulse-dot 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%,100% { opacity:1; box-shadow: 0 0 12px var(--accent); }
+    50% { opacity:0.5; box-shadow: 0 0 4px var(--accent); }
+  }
+
+  .tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(14px, 3.5vw, 18px);
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    text-align: center;
+    max-width: 280px;
+    line-height: 1.6;
+    margin-bottom: 56px;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 32px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--accent-glow);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .btn-primary:hover::before, .btn-primary:active::before { opacity: 1; }
+  .btn-primary:hover { border-color: var(--accent-dim); color: #e8e8f0; }
+
+  .memory-ghost {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text-faint);
+    text-align: center;
+    max-width: 260px;
+    line-height: 1.6;
+    transition: color 1s ease;
+    cursor: pointer;
+    padding: 8px;
+  }
+  .memory-ghost.visible { color: var(--text-dim); }
+  .memory-ghost .mem-label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    font-style: normal;
+    margin-bottom: 6px;
+    color: var(--text-faint);
+  }
+
+  /* ════════════════════════════
+     WRITING SCREEN
+  ════════════════════════════ */
+  #writer {
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 0;
+    background: var(--bg);
+  }
+
+  .writer-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--text-faint);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .bar-left { display:flex; align-items:center; gap: 16px; }
+  .bar-right { display:flex; align-items:center; gap: 12px; }
+
+  .back-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-dim); font-size: 18px;
+    padding: 4px; line-height: 1;
+    transition: color 0.2s;
+  }
+  .back-btn:hover { color: var(--text); }
+
+  .clock {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+
+  .mood-row {
+    display: flex; gap: 8px; align-items: center;
+  }
+  .mood-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--text-faint);
+    background: none; cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mood-btn.active { border-color: var(--accent); background: var(--accent-glow); }
+  .mood-btn:hover { border-color: var(--text-dim); }
+
+  .save-btn {
+    background: none; border: 1px solid var(--text-faint);
+    border-radius: 2px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .save-btn:hover { border-color: var(--accent-dim); color: var(--text); }
+  .save-btn.saving {
+    color: var(--green);
+    border-color: var(--green);
+  }
+
+  .writer-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #entry-text {
+    flex: 1;
+    width: 100%;
+    background: transparent;
+    border: none; outline: none; resize: none;
+    color: var(--text);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 5vw, 24px);
+    font-weight: 300;
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+    padding: 32px 28px;
+    caret-color: var(--accent);
+  }
+  #entry-text::placeholder {
+    color: var(--text-faint);
+    font-style: italic;
+  }
+
+  .char-count {
+    text-align: right;
+    padding: 0 28px 12px;
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+  }
+
+  .connection-hint {
+    margin: 0 20px 16px;
+    padding: 12px 16px;
+    border: 1px solid var(--accent-dim);
+    border-radius: 2px;
+    background: var(--accent-glow);
+    font-size: 12px;
+    color: var(--text-dim);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    display: flex; align-items: flex-start; gap: 10px;
+    flex-shrink: 0;
+  }
+  .connection-hint.visible { opacity: 1; }
+  .connection-hint-icon { color: var(--accent); font-size: 12px; margin-top: 2px; flex-shrink:0; }
+
+  /* ════════════════════════════
+     ARCHIVE
+  ════════════════════════════ */
+  #archive {
+    justify-content: flex-start;
+    align-items: stretch;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .archive-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--text-faint);
+    flex-shrink: 0;
+  }
+
+  .archive-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: #e8e8f0;
+  }
+
+  .map-btn {
+    background: none; border: 1px solid var(--text-faint);
+    border-radius: 2px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .map-btn:hover { border-color: var(--accent-dim); color: var(--text); }
+
+  .entries-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex; flex-direction: column; gap: 10px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .entries-list::-webkit-scrollbar { width: 3px; }
+  .entries-list::-webkit-scrollbar-track { background: transparent; }
+  .entries-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .entry-card {
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: var(--bg2);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .entry-card::before {
+    content: '';
+    position: absolute; left:0; top:0; bottom:0; width:2px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .entry-card:hover { border-color: var(--text-faint); background: var(--bg3); }
+  .entry-card:hover::before { opacity: 1; }
+  .entry-card.connected::after {
+    content: '·';
+    position: absolute; top: 14px; right: 16px;
+    color: var(--accent);
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .card-meta {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 8px;
+  }
+  .card-date {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+  .card-mood { font-size: 12px; }
+
+  .card-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .empty-archive {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px;
+    padding: 40px;
+    text-align: center;
+  }
+  .empty-icon { font-size: 32px; opacity: 0.2; }
+  .empty-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--text-dim);
+  }
+
+  /* ════════════════════════════
+     ENTRY DETAIL
+  ════════════════════════════ */
+  #detail {
+    justify-content: flex-start;
+    align-items: stretch;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .detail-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--text-faint);
+    flex-shrink: 0;
+  }
+  .detail-date {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+
+  .detail-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 28px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .detail-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 5vw, 24px);
+    font-weight: 300;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+
+  .detail-connection {
+    margin-top: 40px;
+    padding: 20px;
+    border: 1px solid var(--accent-dim);
+    border-radius: 2px;
+    background: var(--accent-glow);
+  }
+  .detail-connection-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .detail-connection-preview {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .detail-connection-preview:hover { color: var(--text); }
+
+  .delete-btn {
+    background: none; border: none;
+    color: var(--text-faint);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 7px 0;
+    transition: color 0.2s;
+  }
+  .delete-btn:hover { color: var(--red); }
+
+  /* ════════════════════════════
+     MAP / GRAPH VIEW
+  ════════════════════════════ */
+  #mapview {
+    justify-content: flex-start;
+    align-items: stretch;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .map-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--text-faint);
+    flex-shrink: 0;
+  }
+  .map-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: #e8e8f0;
+  }
+
+  #graph-canvas {
+    flex: 1;
+    width: 100%;
+    display: block;
+    cursor: grab;
+  }
+  #graph-canvas:active { cursor: grabbing; }
+
+  .map-legend {
+    display: flex; gap: 20px; justify-content: center;
+    padding: 12px 20px;
+    border-top: 1px solid var(--text-faint);
+    flex-shrink: 0;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em;
+  }
+  .legend-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+
+  /* ════════════════════════════
+     NAV DOCK (bottom)
+  ════════════════════════════ */
+  .nav-dock {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: center; gap: 0;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .nav-dock.hidden { display: none; }
+
+  .nav-item {
+    flex: 1; max-width: 100px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px;
+    padding: 12px 8px;
+    background: none; border: none; cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-dim);
+  }
+  .nav-item.active { color: var(--accent); }
+  .nav-item:hover { color: var(--text); }
+  .nav-icon { font-size: 18px; line-height: 1; }
+  .nav-label { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; }
+
+  /* ════════════════════════════
+     TOAST
+  ════════════════════════════ */
+  #toast {
+    position: fixed;
+    bottom: 80px; left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 10px 20px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 200;
+  }
+  #toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── scrollbar global ── */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+</style>
+</head>
+<body>
+
+<!-- ══ LANDING ══ -->
+<div class="screen" id="landing">
+  <div class="logo-wrap">
+    <span class="logo">Noctera<span class="logo-dot">·</span></span>
+  </div>
+  <p class="tagline">A quiet place to write, reflect, and connect your thoughts.</p>
+  <button class="btn-primary" id="start-btn">
+    <span>Start writing</span>
+  </button>
+  <div class="memory-ghost" id="memory-ghost">
+    <span class="mem-label">a memory</span>
+    <span id="memory-text"></span>
+  </div>
+</div>
+
+<!-- ══ WRITER ══ -->
+<div class="screen hidden" id="writer">
+  <div class="writer-bar">
+    <div class="bar-left">
+      <button class="back-btn" id="writer-back">←</button>
+      <span class="clock" id="writer-clock"></span>
+    </div>
+    <div class="bar-right">
+      <div class="mood-row" id="mood-row">
+        <button class="mood-btn" data-mood="calm" title="calm">○</button>
+        <button class="mood-btn" data-mood="heavy" title="heavy">◆</button>
+        <button class="mood-btn" data-mood="light" title="light">◇</button>
+      </div>
+      <button class="save-btn" id="save-btn">Save</button>
+    </div>
+  </div>
+  <div class="writer-area">
+    <textarea id="entry-text" placeholder="Write your thoughts…" autofocus></textarea>
+    <div class="char-count" id="char-count">0</div>
+    <div class="connection-hint" id="connection-hint">
+      <span class="connection-hint-icon">◈</span>
+      <span id="connection-hint-text">This feels connected to something you wrote before.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ARCHIVE ══ -->
+<div class="screen hidden" id="archive">
+  <div class="archive-bar">
+    <span class="archive-title">Archive</span>
+    <button class="map-btn" id="map-btn">View Map</button>
+  </div>
+  <div class="entries-list" id="entries-list"></div>
+</div>
+
+<!-- ══ DETAIL ══ -->
+<div class="screen hidden" id="detail">
+  <div class="detail-bar">
+    <button class="back-btn" id="detail-back">←</button>
+    <span class="detail-date" id="detail-date"></span>
+    <button class="delete-btn" id="delete-btn">Delete</button>
+  </div>
+  <div class="detail-body">
+    <div class="detail-text" id="detail-text"></div>
+    <div class="detail-connection hidden" id="detail-connection">
+      <div class="detail-connection-label">◈ Connected memory</div>
+      <div class="detail-connection-preview" id="detail-connection-preview"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAP ══ -->
+<div class="screen hidden" id="mapview">
+  <div class="map-bar">
+    <button class="back-btn" id="map-back">←</button>
+    <span class="map-title">Thought Map</span>
+    <span style="width:60px"></span>
+  </div>
+  <canvas id="graph-canvas"></canvas>
+  <div class="map-legend">
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#7b6ee0"></div>
+      <span>Entry</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#3d3470; border: 1px solid #7b6ee0"></div>
+      <span>Connected</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NAV DOCK ══ -->
+<div class="nav-dock hidden" id="nav-dock">
+  <button class="nav-item" id="nav-write" data-screen="writer">
+    <span class="nav-icon">✦</span>
+    <span class="nav-label">Write</span>
+  </button>
+  <button class="nav-item" id="nav-archive" data-screen="archive">
+    <span class="nav-icon">◎</span>
+    <span class="nav-label">Archive</span>
+  </button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+let entries = JSON.parse(localStorage.getItem('noctera_entries') || '[]');
+let currentScreen = 'landing';
+let selectedMood = null;
+let detailEntryId = null;
+let connectionCheckTimer = null;
+let clockInterval = null;
+
+// ═══════════════════════════════════
+// UTILS
+// ═══════════════════════════════════
+function saveEntries() {
+  localStorage.setItem('noctera_entries', JSON.stringify(entries));
+}
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+function formatDate(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    + ' · ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+}
+
+function formatDateShort(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function showToast(msg, duration = 2000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ═══════════════════════════════════
+// SCREEN NAVIGATION
+// ═══════════════════════════════════
+function goTo(screen) {
+  const prev = document.getElementById(currentScreen);
+  const next = document.getElementById(screen);
+  const dock = document.getElementById('nav-dock');
+
+  if (prev) {
+    prev.classList.add('out');
+    setTimeout(() => { prev.classList.remove('out'); prev.classList.add('hidden'); }, 800);
+  }
+
+  next.classList.remove('hidden');
+
+  // dock visibility
+  if (screen === 'landing') {
+    dock.classList.add('hidden');
+  } else if (screen === 'detail' || screen === 'mapview') {
+    // keep dock hidden while in sub-views
+    dock.classList.add('hidden');
+  } else {
+    dock.classList.remove('hidden');
+    // update active nav
+    document.querySelectorAll('.nav-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.screen === screen);
+    });
+  }
+
+  currentScreen = screen;
+
+  // screen-specific init
+  if (screen === 'writer') initWriter();
+  if (screen === 'archive') renderArchive();
+  if (screen === 'mapview') renderMap();
+}
+
+// ═══════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════
+function updateClock() {
+  const el = document.getElementById('writer-clock');
+  if (!el) return;
+  const d = new Date();
+  el.textContent = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+// ═══════════════════════════════════
+// LANDING
+// ═══════════════════════════════════
+function initLanding() {
+  // Random memory ghost
+  if (entries.length > 0) {
+    const old = entries[Math.floor(Math.random() * entries.length)];
+    const ghost = document.getElementById('memory-ghost');
+    const text = document.getElementById('memory-text');
+    const truncated = old.text.length > 80 ? old.text.slice(0, 80) + '…' : old.text;
+    text.textContent = '"' + truncated + '"';
+    setTimeout(() => ghost.classList.add('visible'), 3000);
+    ghost.addEventListener('click', () => openDetail(old.id));
+  }
+}
+
+document.getElementById('start-btn').addEventListener('click', () => goTo('writer'));
+
+// ═══════════════════════════════════
+// WRITER
+// ═══════════════════════════════════
+function initWriter() {
+  const textarea = document.getElementById('entry-text');
+  textarea.value = '';
+  selectedMood = null;
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('connection-hint').classList.remove('visible');
+  document.getElementById('char-count').textContent = '0';
+
+  updateClock();
+  if (clockInterval) clearInterval(clockInterval);
+  clockInterval = setInterval(updateClock, 1000);
+
+  setTimeout(() => textarea.focus(), 400);
+
+  // char count
+  textarea.addEventListener('input', onTextInput);
+}
+
+function onTextInput() {
+  const val = document.getElementById('entry-text').value;
+  document.getElementById('char-count').textContent = val.length;
+
+  // connection check debounce
+  clearTimeout(connectionCheckTimer);
+  if (val.length > 20 && entries.length > 0) {
+    connectionCheckTimer = setTimeout(() => checkConnectionHint(val), 1200);
+  } else {
+    document.getElementById('connection-hint').classList.remove('visible');
+  }
+}
+
+// mood
+document.getElementById('mood-row').addEventListener('click', e => {
+  const btn = e.target.closest('.mood-btn');
+  if (!btn) return;
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+  if (selectedMood === btn.dataset.mood) {
+    selectedMood = null;
+  } else {
+    btn.classList.add('active');
+    selectedMood = btn.dataset.mood;
+  }
+});
+
+// save
+document.getElementById('save-btn').addEventListener('click', saveEntry);
+
+function saveEntry() {
+  const text = document.getElementById('entry-text').value.trim();
+  if (!text) { showToast('Nothing to save.'); return; }
+
+  const btn = document.getElementById('save-btn');
+  btn.textContent = 'Saved.';
+  btn.classList.add('saving');
+  setTimeout(() => { btn.textContent = 'Save'; btn.classList.remove('saving'); }, 2000);
+
+  const entry = {
+    id: uid(),
+    text,
+    timestamp: Date.now(),
+    mood: selectedMood,
+    connections: []
+  };
+
+  // compute connections
+  entries.forEach(e => {
+    if (computeConnection(text, e.text) > 0.18) {
+      entry.connections.push(e.id);
+      if (!e.connections.includes(entry.id)) e.connections.push(entry.id);
+    }
+  });
+
+  entries.unshift(entry);
+  saveEntries();
+
+  document.getElementById('entry-text').value = '';
+  document.getElementById('char-count').textContent = '0';
+  selectedMood = null;
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('connection-hint').classList.remove('visible');
+
+  showToast('Saved.');
+}
+
+// writer back
+document.getElementById('writer-back').addEventListener('click', () => {
+  if (clockInterval) clearInterval(clockInterval);
+  if (entries.length === 0) goTo('landing');
+  else goTo('archive');
+});
+
+// ═══════════════════════════════════
+// CONNECTION LOGIC
+// ═══════════════════════════════════
+const STOP_WORDS = new Set(['the','a','an','and','or','but','in','on','at','to','for','of','with','is','was','are','were','i','my','me','you','your','it','this','that','have','has','had','be','been','not','do','did','will','would','can','could','should','he','she','they','we','so','if','then','just','all','been','its','his','her','from','by','as','what','how','when','where','who','which','up','out','about','more','no','there','their','an','some','one','two','three','into']);
+
+function tokenize(text) {
+  return text.toLowerCase()
+    .replace(/[^a-z\s]/g, ' ')
+    .split(/\s+/)
+    .filter(w => w.length > 3 && !STOP_WORDS.has(w));
+}
+
+function computeConnection(textA, textB) {
+  const tokA = new Set(tokenize(textA));
+  const tokB = new Set(tokenize(textB));
+  if (tokA.size === 0 || tokB.size === 0) return 0;
+  let shared = 0;
+  tokA.forEach(t => { if (tokB.has(t)) shared++; });
+  return shared / Math.min(tokA.size, tokB.size);
+}
+
+function checkConnectionHint(text) {
+  const hint = document.getElementById('connection-hint');
+  const hintText = document.getElementById('connection-hint-text');
+  let bestScore = 0;
+  let bestEntry = null;
+
+  entries.forEach(e => {
+    const score = computeConnection(text, e.text);
+    if (score > bestScore) { bestScore = score; bestEntry = e; }
+  });
+
+  if (bestScore > 0.18 && bestEntry) {
+    const preview = bestEntry.text.slice(0, 60) + (bestEntry.text.length > 60 ? '…' : '');
+    hintText.textContent = 'This echoes something from ' + formatDateShort(bestEntry.timestamp) + ' — "' + preview + '"';
+    hint.classList.add('visible');
+  } else {
+    hint.classList.remove('visible');
+  }
+}
+
+// ═══════════════════════════════════
+// ARCHIVE
+// ═══════════════════════════════════
+function renderArchive() {
+  const list = document.getElementById('entries-list');
+  list.innerHTML = '';
+
+  if (entries.length === 0) {
+    list.innerHTML = '<div class="empty-archive"><div class="empty-icon">◎</div><div class="empty-text">Nothing written yet.<br>Your thoughts will live here.</div></div>';
+    return;
+  }
+
+  entries.forEach(entry => {
+    const card = document.createElement('div');
+    card.className = 'entry-card' + (entry.connections && entry.connections.length > 0 ? ' connected' : '');
+    card.innerHTML = `
+      <div class="card-meta">
+        <span class="card-date">${formatDate(entry.timestamp)}</span>
+        ${entry.mood ? `<span class="card-mood">${moodIcon(entry.mood)}</span>` : ''}
+      </div>
+      <div class="card-text">${escapeHtml(entry.text)}</div>
+    `;
+    card.addEventListener('click', () => openDetail(entry.id));
+    list.appendChild(card);
+  });
+}
+
+function moodIcon(mood) {
+  return mood === 'calm' ? '○' : mood === 'heavy' ? '◆' : '◇';
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ═══════════════════════════════════
+// DETAIL
+// ═══════════════════════════════════
+function openDetail(id) {
+  const entry = entries.find(e => e.id === id);
+  if (!entry) return;
+  detailEntryId = id;
+
+  document.getElementById('detail-date').textContent = formatDate(entry.timestamp);
+  document.getElementById('detail-text').textContent = entry.text;
+
+  const connBlock = document.getElementById('detail-connection');
+  const connPrev = document.getElementById('detail-connection-preview');
+  connBlock.classList.add('hidden');
+
+  if (entry.connections && entry.connections.length > 0) {
+    const connEntry = entries.find(e => entry.connections.includes(e.id));
+    if (connEntry) {
+      connPrev.textContent = connEntry.text.slice(0, 140) + (connEntry.text.length > 140 ? '…' : '');
+      connBlock.classList.remove('hidden');
+      connPrev.onclick = () => openDetail(connEntry.id);
+    }
+  }
+
+  goTo('detail');
+}
+
+document.getElementById('detail-back').addEventListener('click', () => goTo('archive'));
+
+document.getElementById('delete-btn').addEventListener('click', () => {
+  if (!detailEntryId) return;
+  entries = entries.filter(e => e.id !== detailEntryId);
+  // remove references
+  entries.forEach(e => {
+    e.connections = (e.connections || []).filter(cid => cid !== detailEntryId);
+  });
+  saveEntries();
+  goTo('archive');
+  showToast('Entry removed.');
+});
+
+// ═══════════════════════════════════
+// MAP / GRAPH
+// ═══════════════════════════════════
+document.getElementById('map-btn').addEventListener('click', () => goTo('mapview'));
+document.getElementById('map-back').addEventListener('click', () => goTo('archive'));
+
+let nodes = [], dragging = null, offsetX = 0, offsetY = 0;
+
+function renderMap() {
+  const canvas = document.getElementById('graph-canvas');
+  const ctx = canvas.getContext('2d');
+  const mapEl = document.getElementById('mapview');
+  const barH = mapEl.querySelector('.map-bar').offsetHeight;
+  const legH = mapEl.querySelector('.map-legend').offsetHeight;
+  const W = mapEl.offsetWidth;
+  const H = mapEl.offsetHeight - barH - legH;
+
+  canvas.width = W;
+  canvas.height = H;
+
+  if (entries.length === 0) {
+    ctx.fillStyle = '#2e2e36';
+    ctx.font = "14px 'DM Mono', monospace";
+    ctx.textAlign = 'center';
+    ctx.fillText('No entries yet.', W/2, H/2);
+    return;
+  }
+
+  // build nodes with force layout
+  nodes = entries.map((e, i) => {
+    const angle = (i / entries.length) * Math.PI * 2;
+    const r = Math.min(W, H) * 0.3;
+    return {
+      id: e.id,
+      x: W/2 + r * Math.cos(angle) + (Math.random()-0.5)*40,
+      y: H/2 + r * Math.sin(angle) + (Math.random()-0.5)*40,
+      entry: e
+    };
+  });
+
+  // simple force simulation
+  for (let iter = 0; iter < 80; iter++) {
+    nodes.forEach(a => {
+      nodes.forEach(b => {
+        if (a === b) return;
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+        const force = 2000 / (dist * dist);
+        a.x -= force * dx / dist;
+        a.y -= force * dy / dist;
+      });
+    });
+    // keep in bounds
+    nodes.forEach(n => {
+      n.x = Math.max(24, Math.min(W-24, n.x));
+      n.y = Math.max(24, Math.min(H-24, n.y));
+    });
+  }
+
+  drawGraph(ctx, W, H);
+  setupCanvasEvents(canvas, ctx, W, H);
+}
+
+function drawGraph(ctx, W, H) {
+  ctx.clearRect(0, 0, W, H);
+
+  // edges
+  entries.forEach(e => {
+    const nA = nodes.find(n => n.id === e.id);
+    (e.connections || []).forEach(cid => {
+      const nB = nodes.find(n => n.id === cid);
+      if (!nA || !nB) return;
+      ctx.beginPath();
+      ctx.moveTo(nA.x, nA.y);
+      ctx.lineTo(nB.x, nB.y);
+      ctx.strokeStyle = 'rgba(123,110,224,0.2)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+  });
+
+  // nodes
+  nodes.forEach(n => {
+    const connected = (n.entry.connections || []).length > 0;
+    const r = connected ? 10 : 7;
+
+    // glow
+    if (connected) {
+      const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r*2.5);
+      grad.addColorStop(0, 'rgba(123,110,224,0.3)');
+      grad.addColorStop(1, 'rgba(123,110,224,0)');
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r*2.5, 0, Math.PI*2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r, 0, Math.PI*2);
+    ctx.fillStyle = connected ? '#3d3470' : '#18181c';
+    ctx.fill();
+    ctx.strokeStyle = connected ? '#7b6ee0' : '#3a3a42';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // date label
+    const d = new Date(n.entry.timestamp);
+    const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    ctx.fillStyle = '#5a5a66';
+    ctx.font = "9px 'DM Mono', monospace";
+    ctx.textAlign = 'center';
+    ctx.fillText(label, n.x, n.y + r + 12);
+  });
+}
+
+function setupCanvasEvents(canvas, ctx, W, H) {
+  canvas.onmousedown = canvas.ontouchstart = (e) => {
+    const pos = getPos(e, canvas);
+    dragging = nodes.find(n => {
+      const dx = n.x - pos.x, dy = n.y - pos.y;
+      return Math.sqrt(dx*dx+dy*dy) < 14;
+    });
+    if (dragging) { offsetX = dragging.x - pos.x; offsetY = dragging.y - pos.y; }
+  };
+  canvas.onmousemove = canvas.ontouchmove = (e) => {
+    if (!dragging) return;
+    e.preventDefault();
+    const pos = getPos(e, canvas);
+    dragging.x = Math.max(16, Math.min(W-16, pos.x + offsetX));
+    dragging.y = Math.max(16, Math.min(H-16, pos.y + offsetY));
+    drawGraph(ctx, W, H);
+  };
+  canvas.onmouseup = canvas.ontouchend = () => { dragging = null; };
+  canvas.onclick = (e) => {
+    const pos = getPos(e, canvas);
+    const hit = nodes.find(n => {
+      const dx = n.x - pos.x, dy = n.y - pos.y;
+      return Math.sqrt(dx*dx+dy*dy) < 14;
+    });
+    if (hit) { openDetail(hit.id); }
+  };
+}
+
+function getPos(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+}
+
+// ═══════════════════════════════════
+// NAV DOCK
+// ═══════════════════════════════════
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const screen = btn.dataset.screen;
+    if (screen === 'writer') {
+      document.getElementById('entry-text').value = '';
+    }
+    goTo(screen);
+  });
+});
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+initLanding();
+</script>
+</body>
+</html>
