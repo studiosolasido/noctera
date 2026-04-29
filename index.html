@@ -980,6 +980,142 @@
   ::-webkit-scrollbar { width: 3px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* ── kickstart / launch banner ── */
+  .launch-banner {
+    margin-top: 28px;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    pointer-events: all;
+    animation: fadeUp 1.2s ease 0.3s both;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(12px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .kickstart-badge {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 9px 18px;
+    background: rgba(0,230,100,0.07);
+    border: 1px solid rgba(0,200,80,0.3);
+    border-radius: 3px;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .kickstart-badge:hover {
+    background: rgba(0,230,100,0.13);
+    border-color: rgba(0,200,80,0.55);
+  }
+  .kickstart-badge-icon {
+    width: 20px; height: 20px;
+    background: #0a1a10;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .kickstart-badge-text {
+    display: flex; flex-direction: column; line-height: 1.2;
+  }
+  .kickstart-badge-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #3ecf6e;
+  }
+  .kickstart-badge-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    color: #5a5a66;
+    text-transform: uppercase;
+  }
+  .solana-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px;
+    border: 1px solid rgba(153,69,255,0.35);
+    border-radius: 20px;
+    background: rgba(153,69,255,0.07);
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #9945ff;
+  }
+  .solana-pill-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #9945ff;
+    box-shadow: 0 0 6px #9945ff;
+    animation: pulse-sol 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse-sol {
+    0%,100% { opacity:1; } 50% { opacity:0.35; }
+  }
+  .builders-section {
+    margin-top: 22px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    pointer-events: all;
+    width: 100%; max-width: 320px;
+  }
+  .builders-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 2px;
+  }
+  .builder-card {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%;
+    padding: 11px 16px;
+    background: rgba(18,18,22,0.85);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    text-decoration: none;
+    transition: border-color 0.22s, background 0.22s;
+    backdrop-filter: blur(6px);
+  }
+  .builder-card:hover {
+    border-color: #1d9bf0;
+    background: rgba(29,155,240,0.06);
+  }
+  .builder-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-dim), rgba(29,155,240,0.1));
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px; color: var(--text-dim);
+    flex-shrink: 0;
+  }
+  .builder-info { flex: 1; }
+  .builder-handle {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .builder-role {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .verified-x {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 14px; height: 14px;
+    background: #1d9bf0;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .x-icon-right {
+    color: #5a5a66;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
 </style>
 </head>
 <body>
@@ -1013,6 +1149,43 @@
       </div>
       <p class="intro-tagline">Write into the dark.<br>Find the thread.</p>
       <button class="btn-primary" id="start-btn">Start writing</button>
+
+      <!-- kickstart launch banner -->
+      <div class="launch-banner">
+        <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" class="kickstart-badge">
+          <div class="kickstart-badge-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#0a1a10"/><path d="M4 10L8 6L10 9L13 5L16 10L13 15L10 11L8 14L4 10Z" fill="#3ecf6e"/></svg></div>
+          <div class="kickstart-badge-text">
+            <span class="kickstart-badge-title">Launching on EasyA Kickstart</span>
+            <span class="kickstart-badge-sub">kickstart.easya.io</span>
+          </div>
+        </a>
+        <div class="solana-pill">
+          <span class="solana-pill-dot"></span>
+          NOCTE &middot; Coming Soon on Solana
+        </div>
+      </div>
+
+      <!-- builder social cards -->
+      <div class="builders-section">
+        <div class="builders-label">Built by</div>
+        <a href="https://x.com/otakucompassai" target="_blank" rel="noopener" class="builder-card">
+          <div class="builder-avatar">O</div>
+          <div class="builder-info">
+            <div class="builder-handle">@otakucompassai <span class="verified-x"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6.5L4 9L10.5 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="builder-role">Builder &middot; Creator</div>
+          </div>
+          <span class="x-icon-right">&#x1D54F;</span>
+        </a>
+        <a href="https://x.com/arthousebase" target="_blank" rel="noopener" class="builder-card">
+          <div class="builder-avatar">A</div>
+          <div class="builder-info">
+            <div class="builder-handle">@arthousebase <span class="verified-x"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6.5L4 9L10.5 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="builder-role">Builder &middot; Designer</div>
+          </div>
+          <span class="x-icon-right">&#x1D54F;</span>
+        </a>
+      </div>
+
     </div>
 
   </div>
@@ -1198,9 +1371,7 @@
       </div>
 
       <div class="footer-badge">
-        <a href="https://orynth.dev/projects/noctera" target="_blank" rel="noopener">
-          <img src="https://orynth.dev/api/badge/noctera?theme=light&style=default" alt="Featured on Orynth" width="260" height="80" />
-        </a>
+        <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:10px 20px;background:rgba(0,230,100,0.07);border:1px solid rgba(0,200,80,0.3);border-radius:3px;text-decoration:none;"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#0a1a10"/><path d="M4 10L8 6L10 9L13 5L16 10L13 15L10 11L8 14L4 10Z" fill="#3ecf6e"/></svg><span style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;color:#3ecf6e;">EasyA Kickstart</span></a>
       </div>
 
       <div class="footer-bottom">
@@ -1315,9 +1486,7 @@
       <!-- footer inside whitepaper -->
       <div class="site-footer" style="margin-top: 40px;">
         <div class="footer-badge">
-          <a href="https://orynth.dev/projects/noctera" target="_blank" rel="noopener">
-            <img src="https://orynth.dev/api/badge/noctera?theme=light&style=default" alt="Featured on Orynth" width="260" height="80" />
-          </a>
+          <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:10px 20px;background:rgba(0,230,100,0.07);border:1px solid rgba(0,200,80,0.3);border-radius:3px;text-decoration:none;"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#0a1a10"/><path d="M4 10L8 6L10 9L13 5L16 10L13 15L10 11L8 14L4 10Z" fill="#3ecf6e"/></svg><span style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;color:#3ecf6e;">EasyA Kickstart</span></a>
         </div>
         <div class="footer-bottom">
           <span class="footer-copy">© 2025 Noctera. Luxembourg.</span>
